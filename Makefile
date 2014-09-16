@@ -30,7 +30,7 @@ VIRTUALBOX_OUTPUT := output-virtualbox-iso
 VMWARE_BUILDER := vmware-iso
 VIRTUALBOX_BUILDER := virtualbox-iso
 CURRENT_DIR = $(shell pwd)
-SOURCES := script/fix-slow-dns.sh script/sshd.sh script/vagrant.sh script/vmtool.sh script/cleanup.sh
+SOURCES := $(wildcard script/*.sh) $(http/*.cfg)
 
 .PHONY: list
 
@@ -64,12 +64,12 @@ SHORTCUT_TARGETS := centos65
 $(foreach i,$(SHORTCUT_TARGETS),$(eval $(call SHORTCUT,$(i))))
 ###############################################################################
 
-$(VMWARE_BOX_DIR)/centos65$(BOX_SUFFIX): centos65.json $(SOURCES) http/ks6.cfg
+$(VMWARE_BOX_DIR)/centos65$(BOX_SUFFIX): centos65.json $(SOURCES)
 	rm -rf $(VMWARE_OUTPUT)
 	mkdir -p $(VMWARE_BOX_DIR)
 	$(PACKER) build -only=$(VMWARE_BUILDER) $(PACKER_VARS) -var "iso_url=$(CENTOS65_X86_64)" $<
 
-$(VIRTUALBOX_BOX_DIR)/centos65$(BOX_SUFFIX): centos65.json $(SOURCES) http/ks6.cfg
+$(VIRTUALBOX_BOX_DIR)/centos65$(BOX_SUFFIX): centos65.json $(SOURCES)
 	rm -rf $(VIRTUALBOX_OUTPUT)
 	mkdir -p $(VIRTUALBOX_BOX_DIR)
 	$(PACKER) build -only=$(VIRTUALBOX_BUILDER) $(PACKER_VARS) -var "iso_url=$(CENTOS65_X86_64)" $<
