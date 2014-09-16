@@ -1,5 +1,6 @@
 {
   "variables": {
+    "version": "",
     "headless": "",
     "iso_url": "http://mirrors.kernel.org/centos/6.5/isos/x86_64/CentOS-6.5-x86_64-bin-DVD1.iso",
     "iso_checksum": "32c7695b97f7dcd1f59a77a71f64f2957dddf738",
@@ -81,6 +82,6 @@
   "post-processors": [{
     "type": "vagrant",
     "keep_input_artifact": false,
-    "output": "box/{{.Provider}}/centos65.box"
+    "output": "box/{{.Provider}}/centos65-{{user `version`}}.box"
   }]
 }

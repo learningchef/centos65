@@ -10,8 +10,9 @@ endif
 
 CENTOS65_X86_64 ?= http://mirrors.kernel.org/centos/6.5/isos/x86_64/CentOS-6.5-x86_64-bin-DVD1.iso
 
-PACKER_VARS := -var 'headless=$(HEADLESS)' -var 'update=$(UPDATE)'
-BOX_SUFFIX := .box
+BOX_VERSION ?= $(shell cat VERSION)
+BOX_SUFFIX ?= -$(BOX_VERSION).box
+PACKER_VARS := -var 'headless=$(HEADLESS)' -var 'update=$(UPDATE)' -var 'version=$(BOX_VERSION)'
 ifdef PACKER_DEBUG
 	PACKER := PACKER_LOG=1 packer --debug
 else
