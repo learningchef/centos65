@@ -1,10 +1,11 @@
 ruby_centos := /Users/Shared/centos
 CENTOS65_X86_64 := $(ruby_centos)/CentOS-6.5-x86_64-bin-DVD1.iso
 
+VIRTUALBOX_VERSION = $(shell virtualbox --help | head -n 1 | awk '{print $$NF}')
 VMWARE_BOX_FILES := $(wildcard box/vmware/*.box)
 VIRTUALBOX_BOX_FILES := $(wildcard box/virtualbox/*.box)
 VMWARE_S3_BUCKET := s3://learningchef/vmware9.8.3/
-VIRTUALBOX_S3_BUCKET := s3://learningchef/virtualbox4.3.14/
+VIRTUALBOX_S3_BUCKET := s3://learningchef/virtualbox$(VIRTUALBOX_VERSION)/
 S3_GRANT_ID := id=395536e070ed40ca64c173c16c60677d035e12dabd06298ff923f61e20cf2504
 ALLUSERS_ID := uri=http://acs.amazonaws.com/groups/global/AllUsers
 
