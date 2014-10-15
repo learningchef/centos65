@@ -46,6 +46,3 @@ if [[ $PACKER_BUILDER_TYPE =~ virtualbox ]]; then
         ln -s /opt/VBoxGuestAdditions-4.3.10/lib/VBoxGuestAdditions /usr/lib/VBoxGuestAdditions
     fi
 fi
-
-echo "==> Removing packages needed for building guest tools"
-yum -y remove gcc cpp kernel-devel kernel-headers perl
