@@ -1,5 +1,11 @@
 # Changelog
 
+## 1.0.2 (2014-10-19)
+
+* Upgrade VirtualBox Guest Additions to 4.3.18
+
+* Revert Serverspec workaround, no longer needed with recent changes
+
 ## 1.0.1 (2014-10-15)
 
 * Upgrading VirtualBox Guest Additions to 4.3.16
