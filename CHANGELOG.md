@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.0.5 (2014-11-16)
+
+* Install Parallels tools
+
 ## 1.0.4 (2014-11-16)
 
 * Upgrade VMware Tools to 9.3.4 for VMware Fusion 7
