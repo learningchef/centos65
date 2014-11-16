@@ -1,10 +1,17 @@
 # Changelog
 
+## 1.0.4 (2014-11-16)
+
+* Upgrade VMware Tools to 9.3.4 for VMware Fusion 7
+* Add Parallels desktop virtualization support
+
+## 1.0.3 (2014-10-19)
+
+* Revert Serverspec workaround, no longer needed with recent changes
+
 ## 1.0.2 (2014-10-19)
 
 * Upgrade VirtualBox Guest Additions to 4.3.18
-
-* Revert Serverspec workaround, no longer needed with recent changes
 
 ## 1.0.1 (2014-10-15)
 
