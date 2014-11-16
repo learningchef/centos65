@@ -18,17 +18,20 @@ ifdef PACKER_DEBUG
 else
 	PACKER := packer
 endif
-BUILDER_TYPES := vmware virtualbox
+BUILDER_TYPES := vmware virtualbox parallels
 TEMPLATE_FILENAMES := $(wildcard *.json)
 BOX_FILENAMES := $(TEMPLATE_FILENAMES:.json=$(BOX_SUFFIX))
 BOX_FILES := $(foreach builder, $(BUILDER_TYPES), $(foreach box_filename, $(BOX_FILENAMES), box/$(builder)/$(box_filename)))
 TEST_BOX_FILES := $(foreach builder, $(BUILDER_TYPES), $(foreach box_filename, $(BOX_FILENAMES), test-box/$(builder)/$(box_filename)))
 VMWARE_BOX_DIR := box/vmware
 VIRTUALBOX_BOX_DIR := box/virtualbox
+PARALLELS_BOX_DIR := box/parallels
 VMWARE_OUTPUT := output-vmware-iso
 VIRTUALBOX_OUTPUT := output-virtualbox-iso
+PARALLELS_OUTPUT := output-parallels-iso
 VMWARE_BUILDER := vmware-iso
 VIRTUALBOX_BUILDER := virtualbox-iso
+PARALLELS_BUILDERS := parallels-iso
 CURRENT_DIR = $(shell pwd)
 SOURCES := $(wildcard script/*.sh) $(http/*.cfg)
 
@@ -54,9 +57,15 @@ test-virtualbox/$(1): test-$(VIRTUALBOX_BOX_DIR)/$(1)$(BOX_SUFFIX)
 
 ssh-virtualbox/$(1): ssh-$(VIRTUALBOX_BOX_DIR)/$(1)$(BOX_SUFFIX)
 
-$(1): vmware/$(1) virtualbox/$(1)
+parallels/$(1): $(PARALLELS_BOX_DIR)/$(1)$(BOX_SUFFIX)
 
-test-$(1): test-vmware/$(1) test-virtualbox/$(1)
+test-parallels/$(1): test-$(PARALLELS_BOX_DIR)/$(1)$(BOX_SUFFIX)
+
+ssh-parallels/$(1): ssh-$(PARALLELS_BOX_DIR)/$(1)$(BOX_SUFFIX)
+
+$(1): vmware/$(1) virtualbox/$(1) parallels/$(1)
+
+test-$(1): test-vmware/$(1) test-virtualbox/$(1) test-parallels/$(1)
 
 endef
 
@@ -74,8 +83,13 @@ $(VIRTUALBOX_BOX_DIR)/centos65$(BOX_SUFFIX): centos65.json $(SOURCES)
 	mkdir -p $(VIRTUALBOX_BOX_DIR)
 	$(PACKER) build -only=$(VIRTUALBOX_BUILDER) $(PACKER_VARS) -var "iso_url=$(CENTOS65_X86_64)" $<
 
+$(PARALLELS_BOX_DIR)/centos65$(BOX_SUFFIX): centos65.json $(SOURCES)
+	rm -rf $(PARALLELS_OUTPUT)
+	mkdir -p $(PARALLELS_BOX_DIR)
+	$(PACKER) build -only=$(PARALLELS_BUILDER) $(PACKER_VARS) -var "iso_url=$(CENTOS65_X86_64)" $<
+
 list:
-	@echo "Prepend 'vmware/' or 'virtualbox/' to build only one target platform:"
+	@echo "Prepend 'vmware/', 'virtualbox/' or 'parallels/' to build only one target platform:"
 	@echo "  make vmware/centos65"
 	@echo ""
 	@echo "Targets:"
@@ -115,8 +129,14 @@ test-$(VMWARE_BOX_DIR)/%$(BOX_SUFFIX): $(VMWARE_BOX_DIR)/%$(BOX_SUFFIX)
 test-$(VIRTUALBOX_BOX_DIR)/%$(BOX_SUFFIX): $(VIRTUALBOX_BOX_DIR)/%$(BOX_SUFFIX)
 	bin/test-box.sh $< virtualbox virtualbox $(CURRENT_DIR)/test/*_spec.rb || exit
 
+test-$(PARALLELS_BOX_DIR)/%$(BOX_SUFFIX): $(PARALLELS_BOX_DIR)/%$(BOX_SUFFIX)
+	bin/test-box.sh $< parallels parallels $(CURRENT_DIR)/test/*_spec.rb || exit
+
 ssh-$(VMWARE_BOX_DIR)/%$(BOX_SUFFIX): $(VMWARE_BOX_DIR)/%$(BOX_SUFFIX)
 	bin/ssh-box.sh $< vmware_desktop vmware_fusion $(CURRENT_DIR)/test/*_spec.rb
 
 ssh-$(VIRTUALBOX_BOX_DIR)/%$(BOX_SUFFIX): $(VIRTUALBOX_BOX_DIR)/%$(BOX_SUFFIX)
 	bin/ssh-box.sh $< virtualbox virtualbox $(CURRENT_DIR)/test/*_spec.rb
+
+ssh-$(PARALLELS_BOX_DIR)/%$(BOX_SUFFIX): $(PARALLELS_BOX_DIR)/%$(BOX_SUFFIX)
+	bin/ssh-box.sh $< parallels parallels $(CURRENT_DIR)/test/*_spec.rb
