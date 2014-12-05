@@ -2,7 +2,7 @@ winry_centos := /Volumes/Storage/software/centos
 CENTOS65_X86_64 := $(winry_centos)/CentOS-6.5-x86_64-bin-DVD1.iso
 
 VIRTUALBOX_VERSION = $(shell virtualbox --help | head -n 1 | awk '{print $$NF}')
-VMWARE_VERSION = 9.8.4
+VMWARE_VERSION = 9.9.0
 PARALLELS_VERSION := $(shell prlctl --version | awk '{print $$3}')
 VMWARE_BOX_FILES := $(wildcard box/vmware/*.box)
 VIRTUALBOX_BOX_FILES := $(wildcard box/virtualbox/*.box)
